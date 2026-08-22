@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Motivo de trama: malha de fios cruzados com um nó em destaque.
+     Viewport 108x108; o desenho fica dentro da zona segura (18..90). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:pathData="M42,30 L42,78 M66,30 L66,78 M30,42 L78,42 M30,66 L78,66"
+        android:strokeColor="#4FC9B4"
+        android:strokeWidth="7"
+        android:strokeLineCap="round" />
+
+    <path
+        android:pathData="M60,42 A6,6 0 0 1 72,42 A6,6 0 0 1 60,42 Z"
+        android:fillColor="#EF8256" />
+
+</vector>
