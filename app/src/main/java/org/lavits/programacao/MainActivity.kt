@@ -38,9 +38,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -54,6 +52,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -121,38 +120,22 @@ fun ProgramApp(program: Program, favorites: FavoritesStore) {
                 .fillMaxSize()
         ) {
 
-            ScrollableTabRow(
-                selectedTabIndex = selectedTab,
-                edgePadding = 12.dp,
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.primary,
-                divider = {}
-            ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 program.days.forEachIndexed { index, day ->
-                    Tab(
+                    DayTabItem(
                         selected = selectedTab == index,
-                        onClick = { query = ""; selectedTab = index },
-                        text = {
-                            Text(
-                                text = "${day.key} ago · ${day.label.take(3)}",
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                        }
+                        label = "${day.key} de agosto · ${day.label}",
+                        onClick = { query = ""; selectedTab = index }
                     )
                 }
-                Tab(
+                DayTabItem(
                     selected = selectedTab == agendaTab,
-                    onClick = { query = ""; selectedTab = agendaTab },
-                    text = {
-                        Text(
-                            text = if (favorites.count > 0) {
-                                "Minha agenda (${favorites.count})"
-                            } else {
-                                "Minha agenda"
-                            },
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                    }
+                    label = if (favorites.count > 0) {
+                        "Minha agenda (${favorites.count})"
+                    } else {
+                        "Minha agenda"
+                    },
+                    onClick = { query = ""; selectedTab = agendaTab }
                 )
             }
 
@@ -241,6 +224,48 @@ private fun TypeFilterRow(
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun DayTabItem(
+    selected: Boolean,
+    label: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .background(
+                if (selected) {
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+                } else {
+                    Color.Transparent
+                }
+            )
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .width(3.dp)
+                .height(20.dp)
+                .background(
+                    if (selected) MaterialTheme.colorScheme.primary else Color.Transparent
+                )
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+            color = if (selected) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onBackground
+            }
+        )
     }
 }
 
