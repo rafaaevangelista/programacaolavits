@@ -77,6 +77,16 @@
     padding: 1.25rem 1.5rem;
   }
   a { color: var(--accent); }
+  a.button {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+  }
+  a.button:hover { opacity: 0.9; }
   footer {
     color: var(--text-dim);
     font-size: 0.85rem;
@@ -114,12 +124,17 @@
 
   <section>
     <h2>Como instalar</h2>
-    <p>O app ainda não está em nenhuma loja. Para gerar o APK a partir do código-fonte:</p>
+    <p>O app ainda não está em nenhuma loja.</p>
+    <p>
+      <a class="button" href="downloads/proglavits.apk">⬇ Baixar o APK</a>
+    </p>
+    <p>O Android pode avisar que o app é de "fonte desconhecida" — é normal para APKs
+    fora da Play Store; permita a instalação para prosseguir.</p>
+    <p>Alternativamente, para gerar o APK a partir do código-fonte:</p>
     <pre><code>git clone https://github.com/rafaaevangelista/programacaolavits.git
 cd programacaolavits
 ./gradlew assembleDebug</code></pre>
-    <p>O APK sai em <code>app/build/outputs/apk/debug/app-debug.apk</code>. Detalhes completos
-    no <a href="https://github.com/rafaaevangelista/programacaolavits#readme">README do repositório</a>.</p>
+    <p>Detalhes completos no <a href="https://github.com/rafaaevangelista/programacaolavits#readme">README do repositório</a>.</p>
   </section>
 
   <footer>
