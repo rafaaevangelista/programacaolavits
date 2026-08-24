@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programação LAVITS 2026</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --bg-card: #171a21;
+    --text: #eef0f3;
+    --text-dim: #a6acb8;
+    --accent: #5eb0ef;
+    --border: #262b35;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f7f8fa;
+      --bg-card: #ffffff;
+      --text: #1a1d23;
+      --text-dim: #565d6b;
+      --accent: #1b6fb0;
+      --border: #e2e5ea;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+  }
+  header { margin-bottom: 2.5rem; }
+  h1 {
+    font-size: 2rem;
+    margin: 0 0 0.4rem;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    margin: 0;
+  }
+  section { margin-bottom: 2rem; }
+  h2 {
+    font-size: 1.15rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.9rem;
+  }
+  ul { padding-left: 1.2rem; }
+  li { margin-bottom: 0.35rem; }
+  code {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.9em;
+  }
+  pre {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  pre code { border: none; padding: 0; background: none; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+  a { color: var(--accent); }
+  footer {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+    margin-top: 2.5rem;
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Programação LAVITS 2026</h1>
+    <p class="subtitle">App Android para navegar a programação do VII Simpósio Internacional LAVITS<br>
+    26 a 28 de agosto de 2026 &middot; Rio de Janeiro</p>
+  </header>
+
+  <section class="card">
+    <p>Toda a programação está embutida no app: <strong>79 atividades e 144 trabalhos</strong>,
+    com autores, coautores, coordenação e ministrantes. Funciona <strong>sem internet</strong>
+    e <strong>não pede nenhuma permissão</strong> — não há acesso a rede, localização ou
+    qualquer sensor.</p>
+  </section>
+
+  <section>
+    <h2>O que o app faz</h2>
+    <ul>
+      <li><strong>Três abas de dia</strong> (26, 27, 28 de agosto) com as atividades agrupadas por horário.</li>
+      <li><strong>Busca</strong> por autor, instituição, título, código ou palavra-chave — insensível a acentos e maiúsculas, cobrindo os três dias de uma vez.</li>
+      <li><strong>Filtros por tipo</strong>: sessões temáticas, sessões livres, oficinas, práticas artísticas e tramas.</li>
+      <li><strong>Minha agenda</strong>: favorite atividades e veja avisos automáticos de conflito de horário entre trilhas paralelas.</li>
+      <li><strong>Tema claro e escuro</strong>, seguindo a configuração do sistema.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Como instalar</h2>
+    <p>O app ainda não está em nenhuma loja. Para gerar o APK a partir do código-fonte:</p>
+    <pre><code>git clone https://github.com/rafaaevangelista/programacaolavits.git
+cd programacaolavits
+./gradlew assembleDebug</code></pre>
+    <p>O APK sai em <code>app/build/outputs/apk/debug/app-debug.apk</code>. Detalhes completos
+    no <a href="https://github.com/rafaaevangelista/programacaolavits#readme">README do repositório</a>.</p>
+  </section>
+
+  <footer>
+    Dados extraídos de simposio2026.lavits.org. Código-fonte e documentação técnica em
+    <a href="https://github.com/rafaaevangelista/programacaolavits">github.com/rafaaevangelista/programacaolavits</a>.
+  </footer>
+</main>
+</body>
+</html>

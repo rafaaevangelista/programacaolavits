@@ -3,6 +3,8 @@
 App nativo para navegar a programação do **VII Simpósio Internacional LAVITS**
 (26 a 28 de agosto de 2026, Rio de Janeiro).
 
+📄 Página do projeto: https://rafaaevangelista.github.io/programacaolavits/
+
 Toda a programação está embutida no app: **79 atividades e 144 trabalhos**,
 com autores, coautores, coordenação e ministrantes. Funciona **sem internet**
 e **não pede nenhuma permissão** — não há acesso a rede, localização ou
