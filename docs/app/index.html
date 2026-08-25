@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1F6F63">
+<title>Programação LAVITS 2026</title>
+<style>
+  :root {
+    --bg: #E7E9E2;
+    --surface: #F4F5F0;
+    --surface-variant: #DCDECE;
+    --text: #1B1E19;
+    --text-dim: #54594C;
+    --primary: #1F6F63;
+    --primary-container: #CFE0DA;
+    --outline: #C7CBB8;
+    --outline-variant: #D5D8C6;
+    --error: #8C3A1B;
+    --type-st: #1F6F63;
+    --type-sl: #8A6D1F;
+    --type-of: #38507A;
+    --type-pa: #7A3B63;
+    --type-tr: #A8451F;
+    --type-ev: #868C7A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14160F;
+      --surface: #1B1E15;
+      --surface-variant: #23271B;
+      --text: #E7E7DC;
+      --text-dim: #AEB29F;
+      --primary: #4FC9B4;
+      --primary-container: #1B3B35;
+      --outline: #33372A;
+      --outline-variant: #2A2E22;
+      --error: #EF8256;
+      --type-st: #4FC9B4;
+      --type-sl: #E0BA52;
+      --type-of: #8FA6DE;
+      --type-pa: #DE8FC0;
+      --type-tr: #EF8256;
+      --type-ev: #767A69;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  a { color: var(--primary); }
+  .app { max-width: 720px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
+
+  .topbar { padding: 16px 16px 4px; }
+  .topbar h1 { margin: 0; font-size: 1.15rem; font-weight: 600; }
+  .topbar p { margin: 2px 0 0; font-size: 0.8rem; color: var(--text-dim); }
+  .topbar .back { display: inline-block; margin-bottom: 8px; font-size: 0.8rem; text-decoration: none; color: var(--text-dim); }
+
+  .tabs { display: flex; flex-direction: column; padding: 4px 0; }
+  .tab {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; cursor: pointer; user-select: none;
+    background: transparent; border: none; text-align: left; width: 100%;
+    font: inherit; color: var(--text);
+  }
+  .tab .bar { width: 3px; height: 18px; background: transparent; flex-shrink: 0; }
+  .tab.selected { background: color-mix(in srgb, var(--primary) 12%, transparent); }
+  .tab.selected .bar { background: var(--primary); }
+  .tab.selected { color: var(--primary); font-weight: 600; }
+  .tab .label { font-size: 0.85rem; }
+
+  .searchbar { position: relative; padding: 4px 12px; }
+  .searchbar input {
+    width: 100%; padding: 10px 36px 10px 34px; border-radius: 10px;
+    border: 1px solid var(--outline); background: var(--surface); color: var(--text);
+    font-size: 0.9rem;
+  }
+  .searchbar input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
+  .searchbar .icon-search {
+    position: absolute; left: 24px; top: 50%; transform: translateY(-50%);
+    color: var(--text-dim); pointer-events: none; font-size: 0.9rem;
+  }
+  .searchbar .icon-clear {
+    position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1rem; padding: 4px;
+  }
+
+  .filters { display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px; -ms-overflow-style: none; scrollbar-width: none; }
+  .filters::-webkit-scrollbar { display: none; }
+  .chip {
+    display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    padding: 6px 12px; border-radius: 8px; border: 1px solid var(--outline);
+    background: var(--surface); color: var(--text-dim); font-size: 0.78rem; cursor: pointer;
+  }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .chip.on { background: var(--primary-container); color: var(--text); border-color: transparent; font-weight: 600; }
+
+  main { flex: 1; padding: 4px 12px 32px; }
+  .day-head { padding: 8px 0 4px; }
+  .day-head h2 { margin: 0; font-size: 1.3rem; font-weight: 600; }
+  .day-head p { margin: 2px 0 0; font-size: 0.8rem; color: var(--text-dim); }
+
+  .time-header { display: flex; align-items: center; gap: 8px; padding-top: 16px; }
+  .time-header .time { font-size: 0.85rem; font-weight: 600; }
+  .time-header .rule { flex: 1; height: 1px; background: var(--outline); }
+
+  .cards { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+
+  .card {
+    display: flex; background: var(--surface); border: 1px solid var(--outline);
+    border-radius: 8px; overflow: hidden;
+  }
+  .card .accent { width: 4px; flex-shrink: 0; }
+  .card .body { flex: 1; padding: 8px 6px 12px 12px; min-width: 0; }
+  .card .row-top { display: flex; align-items: center; }
+  .card .badge { flex: 1; font-size: 0.78rem; font-weight: 600; }
+  .card .star {
+    background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 4px 6px; line-height: 1;
+  }
+  .card .title { margin: 2px 0 0; font-size: 0.95rem; font-weight: 600; }
+  .card .people { margin: 6px 0 0; font-size: 0.8rem; color: var(--text-dim); }
+  .card .people div { margin-top: 2px; }
+  .card .works-toggle {
+    display: flex; align-items: center; gap: 6px; margin-top: 8px; padding: 4px 0;
+    cursor: pointer; color: var(--text-dim); font-size: 0.8rem; background: none; border: none; font: inherit;
+  }
+  .card .works-toggle .chev { transition: transform 0.15s; }
+  .card .works-toggle.expanded .chev { transform: rotate(180deg); }
+  .card .works {
+    border-top: 1px solid var(--outline-variant); margin-top: 4px; padding-top: 8px;
+  }
+  .card .works .work + .work { margin-top: 10px; }
+  .card .works .work .t { font-size: 0.85rem; }
+  .card .works .work .a { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
+
+  .empty { padding: 24px; text-align: center; color: var(--text-dim); font-size: 0.9rem; white-space: pre-line; }
+
+  .search-count { font-size: 0.8rem; color: var(--text-dim); padding: 4px 0; }
+  .search-day { font-size: 0.72rem; color: var(--text-dim); margin-bottom: 4px; }
+
+  .agenda-head { display: flex; align-items: center; padding: 8px 0 4px; }
+  .agenda-head .info { flex: 1; }
+  .agenda-head h2 { margin: 0; font-size: 1.3rem; font-weight: 600; }
+  .agenda-head p { margin: 2px 0 0; font-size: 0.8rem; color: var(--text-dim); }
+  .agenda-head p.conflict { color: var(--error); }
+  .agenda-head button { background: none; border: none; color: var(--primary); font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+  .agenda-day { font-size: 0.95rem; font-weight: 600; margin-top: 8px; }
+  .conflict-warning { display: flex; align-items: center; gap: 6px; color: var(--error); font-size: 0.78rem; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <a class="back" href="../index.html">← voltar</a>
+    <h1>VII Simpósio LAVITS</h1>
+    <p>26–28 de agosto de 2026</p>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="searchbar">
+    <span class="icon-search">🔍</span>
+    <input id="search" placeholder="Buscar autor, instituição, título…" autocomplete="off">
+    <button class="icon-clear" id="clear-search" hidden aria-label="Limpar busca">✕</button>
+  </div>
+  <div class="filters" id="filters" hidden></div>
+  <main id="content"></main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var TYPES = {
+    ST: { label: "Sessão Temática", plural: "Sessões Temáticas" },
+    SL: { label: "Sessão Livre", plural: "Sessões Livres" },
+    OF: { label: "Oficina", plural: "Oficinas" },
+    PA: { label: "Prática Artística", plural: "Práticas Artísticas" },
+    TR: { label: "Trama", plural: "Tramas" },
+    EV: { label: "Evento", plural: "Eventos" }
+  };
+  var FILTERABLE = ["ST", "SL", "OF", "PA", "TR"];
+  var TYPE_ORDER = ["ST", "SL", "OF", "PA", "TR", "EV"];
+  var FAVORITES_KEY = "lavits_favoritos";
+
+  function normalizeForSearch(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  }
+
+  function parseStartMinute(time) {
+    var start = time.split(/[–—-]/)[0].trim();
+    var parts = start.split("h");
+    var hours = parseInt(parts[0], 10);
+    if (isNaN(hours)) return 0;
+    var minutes = parts[1] ? parseInt(parts[1], 10) || 0 : 0;
+    return hours * 60 + minutes;
+  }
+
+  function parseProgram(raw) {
+    var days = raw.days.map(function (d) {
+      return { key: d.key, label: d.label, date: d.date };
+    });
+
+    var sessions = raw.sessions.map(function (s) {
+      var type = TYPES[s.type] ? s.type : "EV";
+      var works = (s.works || []).map(function (w) {
+        return { title: w.t, authors: w.a };
+      });
+      var people = s.people || [];
+      var code = s.code && s.code !== "null" ? s.code : null;
+
+      var session = {
+        id: s.id,
+        type: type,
+        code: code,
+        day: s.day,
+        time: s.time,
+        title: s.title,
+        people: people,
+        works: works,
+        startMinute: parseStartMinute(s.time)
+      };
+      session.badge = code || TYPES[type].label;
+
+      var indexParts = [session.title, code || "", TYPES[type].label]
+        .concat(people)
+        .concat(works.map(function (w) { return w.title + " " + w.authors; }));
+      session.searchIndex = normalizeForSearch(indexParts.join(" "));
+
+      return session;
+    });
+
+    return { days: days, sessions: sessions };
+  }
+
+  function sessionsOf(program, dayKey) {
+    return program.sessions.filter(function (s) { return s.day === dayKey; });
+  }
+
+  function buildAgenda(program, favoriteIds) {
+    var daysByKey = {};
+    program.days.forEach(function (d) { daysByKey[d.key] = d; });
+
+    var groups = {};
+    var order = [];
+    program.sessions.forEach(function (s) {
+      if (favoriteIds.indexOf(s.id) === -1) return;
+      var key = s.day + "|" + s.time;
+      if (!groups[key]) { groups[key] = []; order.push(key); }
+      groups[key].push(s);
+    });
+
+    var slots = order.map(function (key) {
+      var parts = key.split("|");
+      var day = daysByKey[parts[0]];
+      if (!day) return null;
+      var sessions = groups[key].slice().sort(function (a, b) {
+        return TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type);
+      });
+      return { day: day, time: parts[1], sessions: sessions, hasConflict: sessions.length > 1 };
+    }).filter(Boolean);
+
+    slots.sort(function (a, b) {
+      if (a.day.key !== b.day.key) return a.day.key < b.day.key ? -1 : 1;
+      return a.sessions[0].startMinute - b.sessions[0].startMinute;
+    });
+
+    return slots;
+  }
+
+  function loadFavorites() {
+    try {
+      var raw = localStorage.getItem(FAVORITES_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
+  function saveFavorites(ids) {
+    try { localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids)); } catch (e) {}
+  }
+
+  // ---- state ----
+
+  var program = null;
+  var state = {
+    selectedTab: 0,
+    query: "",
+    hiddenTypes: {},
+    expandedIds: {},
+    favorites: loadFavorites()
+  };
+
+  var el = {
+    tabs: document.getElementById("tabs"),
+    search: document.getElementById("search"),
+    clearSearch: document.getElementById("clear-search"),
+    filters: document.getElementById("filters"),
+    content: document.getElementById("content")
+  };
+
+  function isFavorite(id) { return state.favorites.indexOf(id) !== -1; }
+
+  function toggleFavorite(id) {
+    var idx = state.favorites.indexOf(id);
+    if (idx === -1) state.favorites.push(id); else state.favorites.splice(idx, 1);
+    saveFavorites(state.favorites);
+    render();
+  }
+
+  function clearFavorites() {
+    state.favorites = [];
+    saveFavorites(state.favorites);
+    render();
+  }
+
+  function toggleExpand(id) {
+    state.expandedIds[id] = !state.expandedIds[id];
+    render();
+  }
+
+  function toggleHiddenType(type) {
+    state.hiddenTypes[type] = !state.hiddenTypes[type];
+    render();
+  }
+
+  function esc(str) {
+    var div = document.createElement("div");
+    div.textContent = str == null ? "" : str;
+    return div.innerHTML;
+  }
+
+  // ---- rendering ----
+
+  function renderTabs() {
+    var agendaTab = program.days.length;
+    var html = "";
+    program.days.forEach(function (day, index) {
+      var selected = state.selectedTab === index;
+      html += tabButton(selected, day.key + " de agosto · " + day.label, index);
+    });
+    var favLabel = state.favorites.length > 0
+      ? "Minha agenda (" + state.favorites.length + ")"
+      : "Minha agenda";
+    html += tabButton(state.selectedTab === agendaTab, favLabel, agendaTab);
+    el.tabs.innerHTML = html;
+
+    Array.prototype.forEach.call(el.tabs.querySelectorAll(".tab"), function (btn) {
+      btn.addEventListener("click", function () {
+        state.query = "";
+        el.search.value = "";
+        state.selectedTab = parseInt(btn.getAttribute("data-index"), 10);
+        render();
+      });
+    });
+  }
+
+  function tabButton(selected, label, index) {
+    return '<button class="tab' + (selected ? " selected" : "") + '" data-index="' + index + '">' +
+      '<span class="bar"></span><span class="label">' + esc(label) + "</span></button>";
+  }
+
+  function renderFilters(show) {
+    if (!show) { el.filters.hidden = true; el.filters.innerHTML = ""; return; }
+    el.filters.hidden = false;
+    el.filters.innerHTML = FILTERABLE.map(function (type) {
+      var on = !state.hiddenTypes[type];
+      return '<button class="chip' + (on ? " on" : "") + '" data-type="' + type + '">' +
+        '<span class="dot" style="background:var(--type-' + type.toLowerCase() + ')"></span>' +
+        esc(TYPES[type].plural) + "</button>";
+    }).join("");
+
+    Array.prototype.forEach.call(el.filters.querySelectorAll(".chip"), function (chip) {
+      chip.addEventListener("click", function () {
+        toggleHiddenType(chip.getAttribute("data-type"));
+      });
+    });
+  }
+
+  function sessionCardHtml(session) {
+    var typeClass = "var(--type-" + session.type.toLowerCase() + ")";
+    var fav = isFavorite(session.id);
+    var expanded = !!state.expandedIds[session.id];
+    var hasWorks = session.works.length > 0;
+
+    var html = '<div class="card">' +
+      '<div class="accent" style="background:' + typeClass + '"></div>' +
+      '<div class="body">' +
+      '<div class="row-top">' +
+      '<div class="badge" style="color:' + typeClass + '">' + esc(session.badge) + "</div>" +
+      '<button class="star" data-fav="' + session.id + '" style="color:' + (fav ? typeClass : "var(--text-dim)") + '" aria-label="' +
+      (fav ? "Remover da minha agenda" : "Adicionar à minha agenda") + '">' + (fav ? "★" : "☆") + "</button>" +
+      "</div>" +
+      '<p class="title">' + esc(session.title) + "</p>";
+
+    if (session.people.length) {
+      html += '<div class="people">' + session.people.map(function (p) {
+        return "<div>" + esc(p) + "</div>";
+      }).join("") + "</div>";
+    }
+
+    if (hasWorks) {
+      html += '<button class="works-toggle' + (expanded ? " expanded" : "") + '" data-toggle="' + session.id + '">' +
+        "<span>" + session.works.length + " trabalhos</span><span class=\"chev\">▾</span></button>";
+      if (expanded) {
+        html += '<div class="works">' + session.works.map(function (w) {
+          return '<div class="work"><div class="t">' + esc(w.title) + '</div><div class="a">' + esc(w.authors) + "</div></div>";
+        }).join("") + "</div>";
+      }
+    }
+
+    html += "</div></div>";
+    return html;
+  }
+
+  function bindCardEvents(container) {
+    Array.prototype.forEach.call(container.querySelectorAll("[data-fav]"), function (btn) {
+      btn.addEventListener("click", function () { toggleFavorite(btn.getAttribute("data-fav")); });
+    });
+    Array.prototype.forEach.call(container.querySelectorAll("[data-toggle]"), function (btn) {
+      btn.addEventListener("click", function () { toggleExpand(btn.getAttribute("data-toggle")); });
+    });
+  }
+
+  function renderDayScreen(day) {
+    var sessions = sessionsOf(program, day.key).filter(function (s) { return !state.hiddenTypes[s.type]; });
+    var byTime = {};
+    var order = [];
+    sessions.forEach(function (s) {
+      if (!byTime[s.time]) { byTime[s.time] = []; order.push(s.time); }
+      byTime[s.time].push(s);
+    });
+    order.sort(function (a, b) { return byTime[a][0].startMinute - byTime[b][0].startMinute; });
+
+    var html = '<div class="day-head"><h2>' + esc(day.label) + "</h2><p>" + esc(day.date) + "</p></div>";
+
+    if (order.length === 0) {
+      html += '<div class="empty">Nenhuma atividade com os filtros atuais.</div>';
+    } else {
+      order.forEach(function (time) {
+        html += '<div class="time-header"><span class="time">' + esc(time) + '</span><span class="rule"></span></div>';
+        html += '<div class="cards">' + byTime[time].map(sessionCardHtml).join("") + "</div>";
+      });
+    }
+
+    el.content.innerHTML = html;
+    bindCardEvents(el.content);
+  }
+
+  function renderSearchResults(query) {
+    var needle = normalizeForSearch(query.trim());
+    var daysByKey = {};
+    program.days.forEach(function (d) { daysByKey[d.key] = d; });
+
+    var hits = program.sessions
+      .filter(function (s) { return !state.hiddenTypes[s.type]; })
+      .filter(function (s) { return s.searchIndex.indexOf(needle) !== -1; })
+      .sort(function (a, b) {
+        if (a.day !== b.day) return a.day < b.day ? -1 : 1;
+        return a.startMinute - b.startMinute;
+      });
+
+    var countLabel = hits.length === 0 ? "Nenhum resultado" :
+      hits.length === 1 ? "1 atividade encontrada" : hits.length + " atividades encontradas";
+
+    var html = '<div class="search-count">' + countLabel + "</div>";
+
+    if (hits.length === 0) {
+      html += '<div class="empty">Tente outro termo — a busca cobre títulos, coordenação, ministrantes, autores e instituições dos 144 trabalhos.</div>';
+    } else {
+      html += '<div class="cards">' + hits.map(function (s) {
+        var dayLabel = daysByKey[s.day] ? daysByKey[s.day].label : s.day;
+        return '<div><div class="search-day">' + esc(dayLabel) + " · " + esc(s.time) + "</div>" + sessionCardHtml(s) + "</div>";
+      }).join("") + "</div>";
+    }
+
+    el.content.innerHTML = html;
+    bindCardEvents(el.content);
+  }
+
+  function renderAgendaScreen() {
+    var slots = buildAgenda(program, state.favorites);
+    var conflicts = slots.filter(function (s) { return s.hasConflict; }).length;
+
+    if (slots.length === 0) {
+      el.content.innerHTML = '<div class="empty">Sua agenda está vazia.\n\n' +
+        "Toque na estrela de qualquer atividade para adicioná-la aqui. As escolhas ficam salvas neste navegador.</div>";
+      return;
+    }
+
+    var summary = conflicts === 0
+      ? state.favorites.length + " atividades · sem conflitos"
+      : state.favorites.length + " atividades · " + conflicts + (conflicts === 1 ? " conflito de horário" : " conflitos de horário");
+
+    var html = '<div class="agenda-head"><div class="info"><h2>Minha agenda</h2>' +
+      '<p class="' + (conflicts > 0 ? "conflict" : "") + '">' + esc(summary) + "</p></div>" +
+      '<button id="clear-agenda">Limpar</button></div>';
+
+    var lastDay = null;
+    slots.forEach(function (slot) {
+      if (slot.day.key !== lastDay) {
+        lastDay = slot.day.key;
+        html += '<div class="agenda-day">' + esc(slot.day.label) + " · " + esc(slot.day.date) + "</div>";
+      }
+      html += '<div class="time-header"><span class="time">' + esc(slot.time) + '</span><span class="rule"></span></div>';
+      if (slot.hasConflict) {
+        html += '<div class="conflict-warning">⚠ ' + slot.sessions.length + " atividades simultâneas</div>";
+      }
+      html += '<div class="cards">' + slot.sessions.map(sessionCardHtml).join("") + "</div>";
+    });
+
+    el.content.innerHTML = html;
+    bindCardEvents(el.content);
+    var clearBtn = document.getElementById("clear-agenda");
+    if (clearBtn) clearBtn.addEventListener("click", clearFavorites);
+  }
+
+  function render() {
+    var agendaTab = program.days.length;
+    var searching = state.query.trim().length > 0;
+
+    renderTabs();
+    renderFilters(searching || state.selectedTab < program.days.length);
+
+    if (searching) {
+      renderSearchResults(state.query);
+    } else if (state.selectedTab === agendaTab) {
+      renderAgendaScreen();
+    } else {
+      renderDayScreen(program.days[state.selectedTab]);
+    }
+  }
+
+  el.search.addEventListener("input", function () {
+    state.query = el.search.value;
+    el.clearSearch.hidden = state.query.length === 0;
+    render();
+  });
+  el.clearSearch.addEventListener("click", function () {
+    state.query = "";
+    el.search.value = "";
+    el.clearSearch.hidden = true;
+    render();
+  });
+
+  fetch("programacao.json")
+    .then(function (res) { return res.json(); })
+    .then(function (raw) {
+      program = parseProgram(raw);
+      render();
+    })
+    .catch(function (err) {
+      el.content.innerHTML = '<div class="empty">Não foi possível carregar a programação.<br>' + esc(err.message) + "</div>";
+    });
+})();
+</script>
+</body>
+</html>
