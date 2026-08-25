@@ -1,9 +1,10 @@
-# Programação LAVITS 2026 — app Android
+# Programação LAVITS 2026 — app Android + webapp
 
-App nativo para navegar a programação do **VII Simpósio Internacional LAVITS**
-(26 a 28 de agosto de 2026, Rio de Janeiro).
+App nativo (e também um webapp) para navegar a programação do **VII Simpósio
+Internacional LAVITS** (26 a 28 de agosto de 2026, Rio de Janeiro).
 
 📄 Página do projeto: https://rafaaevangelista.github.io/programacaolavits/
+🌐 Webapp: https://rafaaevangelista.github.io/programacaolavits/app/
 
 Toda a programação está embutida no app: **79 atividades e 144 trabalhos**,
 com autores, coautores, coordenação e ministrantes. Funciona **sem internet**
@@ -75,10 +76,37 @@ app/src/main/
 │   ├── Theme.kt                     paleta clara/escura e cores por tipo
 │   └── MainActivity.kt              interface em Jetpack Compose
 └── res/                             ícone adaptativo, temas, strings
+
+docs/
+├── index.html                       landing page do projeto (GitHub Pages)
+├── downloads/proglavits.apk         APK para download direto
+└── app/
+    ├── index.html                   webapp (HTML/CSS/JS puro, sem build)
+    └── programacao.json             cópia dos dados usados pelo webapp
 ```
 
 `Model.kt` e `Agenda.kt` não importam nada do Android de propósito: é o que
-permite testá-los numa JVM comum.
+permite testá-los numa JVM comum — e é essa mesma lógica (parsing, busca sem
+acentos, detecção de conflito de horário) que foi portada para JavaScript em
+`docs/app/index.html`.
+
+## Webapp
+
+`docs/app/index.html` é uma versão do app para navegador: mesmas três abas de
+dia, busca, filtros por tipo e "Minha agenda" com aviso de conflito. Não usa
+nenhuma dependência externa nem build — é HTML/CSS/JS puro, publicado junto
+com a landing page pelo GitHub Pages. Os favoritos ficam salvos em
+`localStorage`, por navegador/aparelho (não sincronizam com o app Android).
+
+Para testar localmente:
+
+```bash
+cd docs && python3 -m http.server 8000
+# abra http://localhost:8000/app/
+```
+
+Se `app/src/main/assets/programacao.json` for atualizado, copie o arquivo
+também para `docs/app/programacao.json` para manter o webapp em sincronia.
 
 ## Versões
 
