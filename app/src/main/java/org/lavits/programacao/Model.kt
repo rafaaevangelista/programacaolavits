@@ -47,7 +47,8 @@ data class Session(
     val time: String,
     val title: String,
     val people: List<String>,
-    val works: List<Work>
+    val works: List<Work>,
+    val cancelled: Boolean = false
 ) {
     /** Minuto inicial do horário, usado para ordenar ("14h00–15h50" -> 840). */
     val startMinute: Int = parseStartMinute(time)
@@ -126,7 +127,8 @@ object ProgramParser {
                 people = obj.optJSONArray("people").mapStrings(),
                 works = obj.optJSONArray("works").mapObjects { w ->
                     Work(title = w.getString("t"), authors = w.getString("a"))
-                }
+                },
+                cancelled = obj.optBoolean("cancelled", false)
             )
         }
 

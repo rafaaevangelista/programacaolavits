@@ -54,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 
 class MainActivity : ComponentActivity() {
@@ -557,13 +558,30 @@ private fun SessionCard(
             ) {
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = session.badge,
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = accent,
-                        modifier = Modifier.weight(1f)
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = session.badge,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = accent
+                        )
+                        if (session.cancelled) {
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Surface(
+                                color = Color.Transparent,
+                                shape = RoundedCornerShape(4.dp),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
+                            ) {
+                                Text(
+                                    text = "CANCELADA",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp)
+                                )
+                            }
+                        }
+                    }
                     IconButton(onClick = onToggleFavorite) {
                         Icon(
                             imageVector = Icons.Filled.Star,
@@ -584,7 +602,12 @@ private fun SessionCard(
                 Text(
                     text = session.title,
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = if (session.cancelled) {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
+                    textDecoration = if (session.cancelled) TextDecoration.LineThrough else null
                 )
 
                 if (session.people.isNotEmpty()) {

@@ -123,6 +123,12 @@
     background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 4px 6px; line-height: 1;
   }
   .card .title { margin: 2px 0 0; font-size: 0.95rem; font-weight: 600; }
+  .card.cancelled .title { text-decoration: line-through; color: var(--text-dim); }
+  .card .cancelled-tag {
+    display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em;
+    color: var(--error); border: 1px solid var(--error);
+  }
   .card .people { margin: 6px 0 0; font-size: 0.8rem; color: var(--text-dim); }
   .card .people div { margin-top: 2px; }
   .card .works-toggle {
@@ -221,6 +227,7 @@
         title: s.title,
         people: people,
         works: works,
+        cancelled: !!s.cancelled,
         startMinute: parseStartMinute(s.time)
       };
       session.badge = code || TYPES[type].label;
@@ -385,11 +392,12 @@
     var expanded = !!state.expandedIds[session.id];
     var hasWorks = session.works.length > 0;
 
-    var html = '<div class="card">' +
+    var html = '<div class="card' + (session.cancelled ? " cancelled" : "") + '">' +
       '<div class="accent" style="background:' + typeClass + '"></div>' +
       '<div class="body">' +
       '<div class="row-top">' +
-      '<div class="badge" style="color:' + typeClass + '">' + esc(session.badge) + "</div>" +
+      '<div class="badge" style="color:' + typeClass + '">' + esc(session.badge) +
+      (session.cancelled ? '<span class="cancelled-tag">CANCELADA</span>' : "") + "</div>" +
       '<button class="star" data-fav="' + session.id + '" style="color:' + (fav ? typeClass : "var(--text-dim)") + '" aria-label="' +
       (fav ? "Remover da minha agenda" : "Adicionar à minha agenda") + '">' + (fav ? "★" : "☆") + "</button>" +
       "</div>" +
