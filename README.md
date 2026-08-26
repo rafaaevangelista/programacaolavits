@@ -144,7 +144,8 @@ local/sala exibido no cartão da atividade (ex.: `"FCC/CBAE · Sala 2"`).
 ---
 
 Dados extraídos de `simposio2026.lavits.org`. As salas foram incorporadas a
-partir da atualização publicada pelo site oficial em agosto de 2026, mas
-ainda faltam confirmar: Práticas Artísticas e Tramas dos dias 27 e 28, e o
-evento de encerramento (28/8). Confira a programação oficial para essas
-salas pendentes e para eventuais mudanças de última hora.
+partir da atualização publicada pelo site oficial em agosto de 2026
+(todas as Tramas ocorrem na mesma sala, o Salão Nobre do FCC/CBAE), mas
+ainda faltam confirmar: Práticas Artísticas dos dias 27 e 28, e o evento
+de encerramento (28/8). Confira a programação oficial para essas salas
+pendentes e para eventuais mudanças de última hora.
