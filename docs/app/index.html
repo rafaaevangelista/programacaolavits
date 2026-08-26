@@ -123,6 +123,7 @@
     background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 4px 6px; line-height: 1;
   }
   .card .title { margin: 2px 0 0; font-size: 0.95rem; font-weight: 600; }
+  .card .room { margin: 4px 0 0; font-size: 0.78rem; font-weight: 600; }
   .card.cancelled .title { text-decoration: line-through; color: var(--text-dim); }
   .card .cancelled-tag {
     display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 4px;
@@ -217,6 +218,7 @@
       });
       var people = s.people || [];
       var code = s.code && s.code !== "null" ? s.code : null;
+      var room = s.room && s.room !== "null" ? s.room : null;
 
       var session = {
         id: s.id,
@@ -225,6 +227,7 @@
         day: s.day,
         time: s.time,
         title: s.title,
+        room: room,
         people: people,
         works: works,
         cancelled: !!s.cancelled,
@@ -402,6 +405,10 @@
       (fav ? "Remover da minha agenda" : "Adicionar à minha agenda") + '">' + (fav ? "★" : "☆") + "</button>" +
       "</div>" +
       '<p class="title">' + esc(session.title) + "</p>";
+
+    if (session.room && !session.cancelled) {
+      html += '<p class="room" style="color:' + typeClass + '">' + esc(session.room) + "</p>";
+    }
 
     if (session.people.length) {
       html += '<div class="people">' + session.people.map(function (p) {

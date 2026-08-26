@@ -610,6 +610,15 @@ private fun SessionCard(
                     textDecoration = if (session.cancelled) TextDecoration.LineThrough else null
                 )
 
+                if (session.room != null && !session.cancelled) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = session.room,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = accent
+                    )
+                }
+
                 if (session.people.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(6.dp))
                     session.people.forEach { line ->

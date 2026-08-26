@@ -27,7 +27,7 @@ class ProgramParserTest {
     @Test
     fun `carrega a programacao completa`() {
         assertEquals(3, program.days.size)
-        assertEquals(79, program.sessions.size)
+        assertEquals(80, program.sessions.size)
         assertEquals(144, program.sessions.sumOf { it.works.size })
     }
 
@@ -41,7 +41,7 @@ class ProgramParserTest {
     fun `todos os tipos sao reconhecidos`() {
         assertEquals(24, program.sessions.count { it.type == SessionType.ST })
         assertEquals(19, program.sessions.count { it.type == SessionType.SL })
-        assertEquals(22, program.sessions.count { it.type == SessionType.OF })
+        assertEquals(23, program.sessions.count { it.type == SessionType.OF })
         assertEquals(7, program.sessions.count { it.type == SessionType.PA })
         assertEquals(4, program.sessions.count { it.type == SessionType.TR })
     }
@@ -114,7 +114,7 @@ class ProgramParserTest {
     @Test
     fun `favoritar tudo preserva todas as atividades`() {
         val agenda = buildAgenda(program, program.sessions.map { it.id }.toSet())
-        assertEquals(79, agenda.sumOf { it.sessions.size })
+        assertEquals(80, agenda.sumOf { it.sessions.size })
         assertFalse(agenda.isEmpty())
     }
 }

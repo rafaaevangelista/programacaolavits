@@ -46,6 +46,7 @@ data class Session(
     val day: String,
     val time: String,
     val title: String,
+    val room: String?,
     val people: List<String>,
     val works: List<Work>,
     val cancelled: Boolean = false
@@ -124,6 +125,7 @@ object ProgramParser {
                 day = obj.getString("day"),
                 time = obj.getString("time"),
                 title = obj.getString("title"),
+                room = obj.optString("room").takeIf { it.isNotBlank() && it != "null" },
                 people = obj.optJSONArray("people").mapStrings(),
                 works = obj.optJSONArray("works").mapObjects { w ->
                     Work(title = w.getString("t"), authors = w.getString("a"))
