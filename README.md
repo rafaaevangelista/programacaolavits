@@ -6,7 +6,7 @@ Internacional LAVITS** (26 a 28 de agosto de 2026, Rio de Janeiro).
 📄 Página do projeto: https://rafaaevangelista.github.io/programacaolavits/
 🌐 Webapp: https://rafaaevangelista.github.io/programacaolavits/app/
 
-Toda a programação está embutida no app: **79 atividades e 144 trabalhos**,
+Toda a programação está embutida no app: **80 atividades e 144 trabalhos**,
 com autores, coautores, coordenação e ministrantes. Funciona **sem internet**
 e **não pede nenhuma permissão** — não há acesso a rede, localização ou
 qualquer sensor. Os dados vivem em `app/src/main/assets/programacao.json`.
@@ -138,10 +138,13 @@ Se a organização publicar mudanças na programação, basta substituir
 
 `type` aceita `ST` (sessão temática), `SL` (sessão livre), `OF` (oficina),
 `PA` (prática artística), `TR` (trama) e `EV` (evento institucional).
-Os campos `code`, `people` e `works` são opcionais.
+Os campos `code`, `room`, `people` e `works` são opcionais. `room` é o
+local/sala exibido no cartão da atividade (ex.: `"FCC/CBAE · Sala 2"`).
 
 ---
 
-Dados extraídos de `simposio2026.lavits.org`. Confira a programação oficial
-para eventuais mudanças de última hora e para os locais e salas, que ainda
-não estavam publicados quando estes dados foram coletados.
+Dados extraídos de `simposio2026.lavits.org`. As salas foram incorporadas a
+partir da atualização publicada pelo site oficial em agosto de 2026, mas
+ainda faltam confirmar: Práticas Artísticas e Tramas dos dias 27 e 28, e o
+evento de encerramento (28/8). Confira a programação oficial para essas
+salas pendentes e para eventuais mudanças de última hora.
