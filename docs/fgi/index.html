@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#D9481F">
+<title>Agenda FGI 2026</title>
+<style>
+  :root {
+    --bg: #F6F3EF;
+    --surface: #FFFFFF;
+    --text: #1C1A18;
+    --text-dim: #625C55;
+    --primary: #D9481F;
+    --primary-soft: #FBE4DB;
+    --outline: #E4DDD5;
+    --break: #9A938A;
+    --now: #1E8A5A;
+    --now-soft: #DDF1E6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151311;
+      --surface: #1F1C19;
+      --text: #EDE8E2;
+      --text-dim: #A9A198;
+      --primary: #F07A52;
+      --primary-soft: #3A2419;
+      --outline: #34302B;
+      --break: #7D766E;
+      --now: #5CCB95;
+      --now-soft: #173327;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text); line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .app { max-width: 720px; margin: 0 auto; padding-bottom: 40px; }
+
+  .topbar { padding: 16px 16px 8px; }
+  .topbar .back { display: inline-block; margin-bottom: 8px; font-size: 0.8rem; text-decoration: none; color: var(--text-dim); }
+  .topbar h1 { margin: 0; font-size: 1.15rem; font-weight: 650; }
+  .topbar p { margin: 2px 0 0; font-size: 0.8rem; color: var(--text-dim); }
+
+  .tabs { display: flex; gap: 6px; padding: 8px 12px; position: sticky; top: 0; background: var(--bg); z-index: 2; }
+  .tab {
+    flex: 1; padding: 10px 8px; border-radius: 10px; border: 1px solid var(--outline);
+    background: var(--surface); color: var(--text); font: inherit; font-size: 0.85rem; cursor: pointer;
+  }
+  .tab small { display: block; font-size: 0.72rem; color: var(--text-dim); }
+  .tab.selected { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+  .tab.selected small { color: rgba(255,255,255,0.85); }
+
+  .searchbar { position: relative; padding: 4px 12px; }
+  .searchbar input {
+    width: 100%; padding: 10px 36px 10px 12px; border-radius: 10px;
+    border: 1px solid var(--outline); background: var(--surface); color: var(--text); font-size: 0.9rem;
+  }
+  .searchbar input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
+  .searchbar button {
+    position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1rem; padding: 4px;
+  }
+
+  .nowbar {
+    margin: 8px 12px 0; padding: 10px 12px; border-radius: 10px;
+    background: var(--now-soft); color: var(--text); font-size: 0.82rem;
+  }
+  .nowbar b { color: var(--now); }
+
+  main { padding: 4px 12px; }
+  .meta { font-size: 0.8rem; color: var(--text-dim); padding: 8px 2px 0; }
+
+  .item {
+    display: flex; margin-top: 10px; background: var(--surface);
+    border: 1px solid var(--outline); border-radius: 10px; overflow: hidden;
+  }
+  .item .accent { width: 4px; flex-shrink: 0; background: var(--primary); }
+  .item.break .accent { background: var(--break); }
+  .item.now { border-color: var(--now); }
+  .item.now .accent { background: var(--now); }
+  .item .body { flex: 1; min-width: 0; padding: 10px 12px 12px; }
+  .item .time { font-size: 0.8rem; font-weight: 650; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+  .item.break .time { color: var(--break); }
+  .item.now .time { color: var(--now); }
+  .item .tag {
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.04em; padding: 1px 6px;
+    border-radius: 4px; background: var(--now); color: #fff;
+  }
+  .item .kind { font-size: 0.75rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+  .item .title { margin: 2px 0 0; font-size: 1rem; font-weight: 650; }
+  .item.break .title { font-weight: 500; color: var(--text-dim); font-size: 0.9rem; }
+  .item .subtitle { margin: 2px 0 0; font-size: 0.85rem; color: var(--text-dim); }
+
+  .people { list-style: none; margin: 10px 0 0; padding: 10px 0 0; border-top: 1px solid var(--outline); }
+  .people li { font-size: 0.85rem; margin-top: 6px; }
+  .people li:first-child { margin-top: 0; }
+  .people .name { font-weight: 600; }
+  .people .org { color: var(--text-dim); }
+  .pill {
+    display: inline-block; margin-left: 4px; padding: 0 6px; border-radius: 4px;
+    font-size: 0.68rem; font-weight: 650; vertical-align: 1px; white-space: nowrap;
+  }
+  .pill.mod { background: var(--primary-soft); color: var(--primary); }
+  .pill.rem { border: 1px solid var(--outline); color: var(--text-dim); }
+  .pill.tbc { border: 1px dashed var(--text-dim); color: var(--text-dim); }
+  mark { background: var(--primary-soft); color: inherit; border-radius: 2px; }
+
+  .empty { padding: 32px 16px; text-align: center; color: var(--text-dim); font-size: 0.9rem; }
+  .search-day { font-size: 0.72rem; color: var(--text-dim); margin: 14px 2px -6px; }
+
+  footer { padding: 24px 16px 0; font-size: 0.75rem; color: var(--text-dim); text-align: center; }
+  footer a { color: var(--text-dim); }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <a class="back" href="../index.html">← voltar</a>
+    <h1>Fórum Lusófono da Governação da Internet</h1>
+    <p>Centro de Convenções de Talatona · Luanda</p>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="searchbar">
+    <input id="search" type="search" placeholder="Buscar orador, instituição, país, tema…" autocomplete="off">
+    <button id="clear" hidden aria-label="Limpar busca">✕</button>
+  </div>
+  <div id="nowbar"></div>
+  <main id="content"></main>
+  <footer>Fonte: <a href="https://fgi.ao/agenda">fgi.ao/agenda</a> · horários de Luanda (WAT)</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // Dados transcritos de https://fgi.ao/agenda.
+  // Marcadores nos nomes: (M) moderação, (R) remoto, (C) a confirmar.
+  var DAYS = [
+    { key: "2026-09-23", tab: "1º dia", date: "Quarta, 23 de setembro" },
+    { key: "2026-09-24", tab: "2º dia", date: "Quinta, 24 de setembro" }
+  ];
+
+  var ITEMS = {
+    "2026-09-23": [
+      { t: "08:00–09:00", title: "Chegada e Registo dos Participantes", brk: true },
+      { t: "09:00–09:45", title: "Sessão de Abertura" },
+      { t: "09:45–10:00", title: "Foto de Família", brk: true },
+      { t: "10:00–10:30", title: "Intervalo para Café", brk: true },
+      { t: "10:30–12:00", kind: "Painel 1", title: "Além do acesso: conectividade significativa para sociedades mais inclusivas", people: [
+        ["Reinaldo Ferraz", "Ceweb.br/NIC.br, Brasil – Comunidade Técnica", "M"],
+        ["Cláudia Esmael", "Instituto Nacional de Comunicações (INCM), Moçambique – Setor Governamental", "R"],
+        ["Graziela Castello", "Cetic.br/NIC.br, Brasil – Comunidade Técnica"],
+        ["Sandra Martins", ".PT, Portugal – Comunidade Técnica"],
+        ["Amaro João", "Gabinete de Gestão do Programa Espacial Nacional (GGPEN) – Setor Governamental"]
+      ]},
+      { t: "12:00–13:30", title: "Intervalo para Almoço", brk: true },
+      { t: "13:30–15:00", kind: "Painel 2", title: "Da Ética à Implementação: Sandboxes Regulatórias para uma Governação Responsável da Inteligência Artificial no Espaço Lusófono", people: [
+        ["Henrique Faulhaber", "CGI.br, Brasil – Setor Empresarial", "M"],
+        ["Lourino Chemane", "Instituto Nacional de Tecnologias de Informação e Comunicação (INTIC), Moçambique – Setor Governamental"],
+        ["Albert França Josué Costa", "Agência Nacional de Proteção de Dados (ANPD), Brasil – Setor Governamental"],
+        ["João Pita Costa", "International Research Centre on AI under the auspices of UNESCO (IRCAI) – Organismo internacional"],
+        ["Leonilde Santos", "Agência de Regulação Multissectorial da Economia (ARME), Cabo Verde – Setor Governamental"]
+      ]},
+      { t: "15:00–15:30", title: "Intervalo para Café", brk: true },
+      { t: "15:30–17:00", kind: "Painel 3", title: "Desenvolvimento de Infraestruturas públicas digitais nos países de língua portuguesa", people: [
+        ["Nadine Chorão", "Associação de Reguladores de Comunicações (ARCTEL-CPLP)", "M"],
+        ["Adilson Gomes", "Agência de Transformação Digital e Inovação, Moçambique – Setor Governamental"],
+        ["Cecilio Sacramento", "Autoridade Geral de Regulação (AGER), São Tomé e Príncipe – Setor Governamental", "R"],
+        ["Renata Mielli", "CGI.br, Brasil – Setor Governamental"],
+        ["Sandra Maximiano", "Autoridade Nacional de Comunicações (ANACOM), Portugal – Setor Governamental", "R"],
+        ["Representante da CVTelecom", "Cabo Verde – Setor Privado", "C"],
+        ["Paulo Araújo", "CEO da WiConnect Angola"],
+        ["José Abu-Raya", "CVTelecom"]
+      ]}
+    ],
+    "2026-09-24": [
+      { t: "08:00–09:00", title: "Chegada e Registo dos Participantes", brk: true },
+      { t: "09:00–10:30", kind: "Painel 4", title: "Soberania, Infraestrutura Digital e Governação de Dados: desenvolvimento e cooperação nos países de língua portuguesa", people: [
+        ["Rodolfo Avelino", "Comitê Gestor da Internet no Brasil (CGI.br), Brasil – Terceiro Setor", "M"],
+        ["José Pedro Antunes", "Wise2Cert, Portugal – Setor Privado"],
+        ["Lourino Chemane", "Instituto Nacional de Tecnologias de Informação e Comunicação (INTIC), Moçambique – Setor Governamental"],
+        ["Cipriano Sikito", "Director de Tecnologia na OMNIdata, Angola"],
+        ["Sandra Ávila", "Universidade Estadual de Campinas (Unicamp), Brasil – Academia", "R"]
+      ]},
+      { t: "10:30–11:00", title: "Intervalo para Café", brk: true },
+      { t: "11:00–12:30", kind: "Painel 5", title: "Crianças e adolescentes na Internet: desafios para regulação e oportunidades de desenvolvimento", people: [
+        ["Eugenio Vargas Garcia", "Ministério das Relações Exteriores (MRE), Brasil – Setor Governamental", "M"],
+        ["Eduarda Ferreira", "CICS.NOVA e EU Kids online, Portugal – Academia"],
+        ["Luisa Ribeiro Lopes", ".PT, Portugal – Comunidade técnica"],
+        ["Maria Mello", "Instituto Alana, Brasil – Terceiro Setor"],
+        ["Ruana Miranda", "SheTech, Cabo Verde – Setor Privado"],
+        ["Rosa Dique", "Instituto Nacional de Tecnologias de Informação e Comunicação (INTIC), Moçambique – Setor Governamental", "R"]
+      ]},
+      { t: "12:30–14:00", title: "Intervalo para Almoço", brk: true },
+      { t: "14:00–15:30", kind: "Painel 6", title: "Cibersegurança e Proteção de Dados: instâncias de cooperação entre países lusófonos", people: [
+        ["Gaspar Micolo", "Advogado e consultor em Direito da Protecção de Dados e da Cibersegurança", "M"],
+        ["José Casinha", ".PT, Portugal – Comunidade técnica"],
+        ["Eugenio Jeremias", "Instituto Nacional de Tecnologias de Informação e Comunicação (INTIC), Moçambique – Setor Governamental", "R"],
+        ["Eduardo Gomes", "Agência Nacional de Proteção de Dados (ANPD), Brasil – Setor Governamental"],
+        ["José Alegre", "Agência Nacional de Proteção de Dados Pessoais (ANDP), São Tomé e Príncipe – Setor Governamental", "R"],
+        ["José Nkombo", "Agência de Protecção de Dados (APD) Angola – Setor Governamental"]
+      ]},
+      { t: "15:30–16:00", title: "Intervalo para Café", brk: true },
+      { t: "16:00–17:30", kind: "Painel 7", title: "Participação multissetorial na Governação da Internet: desafios e possibilidades nos países Lusófonos", people: [
+        ["Lourino Chemane", "Instituto Nacional de Tecnologias de Informação e Comunicação (INTIC), Moçambique – Setor Governamental", "M"],
+        ["Ana Amoroso das Neves", "Agência para a Reforma Tecnológica do Estado (ARTE), Portugal – Governo"],
+        ["Constantino Sotomane", "Instituto Nacional de Tecnologias de Informação e Comunicação (INTIC), Moçambique – Setor Governamental", "R"],
+        ["Pierre Dandjinou", "Coalition for Digital Africa/ICANN – Comunidade técnica"],
+        ["Rafael Evangelista", "Comitê Gestor da Internet no Brasil (CGI.br), Brasil – Academia"],
+        ["Vitória Leite", "Programa de Jovens, Brasil"],
+        ["Suzete Centeio Pereira", "Agência de Regulação Multissectorial da Economia (ARME), Cabo Verde – Setor Governamental"]
+      ]},
+      { t: "17:30–18:30", kind: "Encerramento", title: "Sessão de Encerramento", subtitle: "Carta de Luanda" }
+    ]
+  };
+
+  var PILLS = {
+    M: '<span class="pill mod">moderação</span>',
+    R: '<span class="pill rem">remoto</span>',
+    C: '<span class="pill tbc">a confirmar</span>'
+  };
+  var PILL_WORDS = { M: "moderacao moderador moderadora", R: "remoto online", C: "a confirmar" };
+
+  function norm(s) { return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function toMin(hhmm) { var p = hhmm.split(":"); return +p[0] * 60 + +p[1]; }
+
+  DAYS.forEach(function (d) {
+    ITEMS[d.key].forEach(function (it) {
+      var range = it.t.split("–");
+      it.day = d.key;
+      it.start = toMin(range[0]);
+      it.end = toMin(range[1]);
+      it.people = it.people || [];
+      it.index = norm([it.kind || "", it.title, it.subtitle || ""].concat(it.people.map(function (p) {
+        return p[0] + " " + p[1] + " " + (PILL_WORDS[p[2]] || "");
+      })).join(" "));
+    });
+  });
+
+  // Hora atual em Luanda (UTC+1, sem horário de verão).
+  function luandaNow() {
+    var d = new Date(Date.now() + 60 * 60 * 1000);
+    return { day: d.toISOString().slice(0, 10), min: d.getUTCHours() * 60 + d.getUTCMinutes() };
+  }
+  function isNow(it, now) { return it.day === now.day && now.min >= it.start && now.min < it.end; }
+
+  var el = {
+    tabs: document.getElementById("tabs"),
+    search: document.getElementById("search"),
+    clear: document.getElementById("clear"),
+    nowbar: document.getElementById("nowbar"),
+    content: document.getElementById("content")
+  };
+
+  var initial = luandaNow();
+  var state = {
+    day: DAYS.some(function (d) { return d.key === initial.day; }) ? initial.day : DAYS[0].key,
+    query: ""
+  };
+
+  function highlight(text, needle) {
+    if (!needle) return esc(text);
+    var n = norm(text), i = n.indexOf(needle);
+    if (i === -1) return esc(text);
+    return esc(text.slice(0, i)) + "<mark>" + esc(text.slice(i, i + needle.length)) + "</mark>" +
+      esc(text.slice(i + needle.length));
+  }
+
+  function itemHtml(it, now, needle) {
+    var live = isNow(it, now);
+    var cls = "item" + (it.brk ? " break" : "") + (live ? " now" : "");
+    var html = '<article class="' + cls + '"><div class="accent"></div><div class="body">' +
+      '<div class="time">' + esc(it.t.replace("–", " – ")) + (live ? '<span class="tag">AGORA</span>' : "") + "</div>";
+    if (it.kind) html += '<div class="kind">' + esc(it.kind) + "</div>";
+    html += '<p class="title">' + highlight(it.title, needle) + "</p>";
+    if (it.subtitle) html += '<p class="subtitle">' + esc(it.subtitle) + "</p>";
+    if (it.people.length) {
+      html += '<ul class="people">' + it.people.map(function (p) {
+        return '<li><span class="name">' + highlight(p[0], needle) + '</span>' + (p[2] ? PILLS[p[2]] : "") +
+          '<br><span class="org">' + highlight(p[1], needle) + "</span></li>";
+      }).join("") + "</ul>";
+    }
+    return html + "</div></article>";
+  }
+
+  function renderTabs() {
+    el.tabs.innerHTML = DAYS.map(function (d) {
+      var sel = !state.query && d.key === state.day;
+      return '<button class="tab' + (sel ? " selected" : "") + '" data-day="' + d.key + '">' +
+        esc(d.tab) + "<small>" + esc(d.date) + "</small></button>";
+    }).join("");
+  }
+
+  function renderNowbar(now) {
+    var all = DAYS.reduce(function (acc, d) { return acc.concat(ITEMS[d.key]); }, []);
+    var current = all.filter(function (it) { return isNow(it, now); })[0];
+    var next = all.filter(function (it) {
+      return it.day === now.day && it.start >= now.min && !it.brk;
+    })[0];
+    var parts = [];
+    if (current) parts.push("<b>Agora:</b> " + esc(current.kind ? current.kind + " · " + current.title : current.title));
+    if (next && next !== current) parts.push("<b>A seguir (" + esc(next.t.split("–")[0]) + "):</b> " + esc(next.kind ? next.kind + " · " + next.title : next.title));
+    el.nowbar.innerHTML = parts.length ? '<div class="nowbar">' + parts.join("<br>") + "</div>" : "";
+  }
+
+  function render() {
+    var now = luandaNow();
+    renderTabs();
+    renderNowbar(now);
+    var needle = norm(state.query.trim());
+    var html = "";
+
+    if (needle) {
+      var hits = [];
+      DAYS.forEach(function (d) {
+        ITEMS[d.key].forEach(function (it) { if (it.index.indexOf(needle) !== -1) hits.push({ d: d, it: it }); });
+      });
+      html += '<div class="meta">' + (hits.length === 0 ? "Nenhum resultado" :
+        hits.length === 1 ? "1 sessão encontrada" : hits.length + " sessões encontradas") + "</div>";
+      if (!hits.length) html += '<div class="empty">Tente outro nome, instituição, país ou tema.</div>';
+      hits.forEach(function (h) {
+        html += '<div class="search-day">' + esc(h.d.tab) + " · " + esc(h.d.date) + "</div>" + itemHtml(h.it, now, needle);
+      });
+    } else {
+      ITEMS[state.day].forEach(function (it) { html += itemHtml(it, now, ""); });
+    }
+    el.content.innerHTML = html;
+  }
+
+  el.tabs.addEventListener("click", function (e) {
+    var btn = e.target.closest(".tab");
+    if (!btn) return;
+    state.day = btn.getAttribute("data-day");
+    state.query = "";
+    el.search.value = "";
+    el.clear.hidden = true;
+    render();
+    window.scrollTo(0, 0);
+  });
+  el.search.addEventListener("input", function () {
+    state.query = el.search.value;
+    el.clear.hidden = !state.query;
+    render();
+  });
+  el.clear.addEventListener("click", function () {
+    state.query = "";
+    el.search.value = "";
+    el.clear.hidden = true;
+    render();
+    el.search.focus();
+  });
+
+  render();
+  setInterval(render, 60 * 1000);
+})();
+</script>
+</body>
+</html>
